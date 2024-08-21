@@ -15,6 +15,12 @@
 						<label for="reg" class="modal-title font_Gogh fs_40 cake_blue" id="RegModalLabel">Вход /
 							Регистрация</label>
 					</div>
+					{% if user %}
+					<div>
+						<p>Hello {{ user.name }} ({{ user.phone_number }})</p>
+						<p>You can <a href="{% url 'logout' %}">Logout</a></p>
+					</div>
+					{% else %}
 					<form class="d-none">
 						<input v-model="RegInput" type="text" name="REG">
 						<button type="submit" ref="HiddenFormSubmitReg">reg</button>
@@ -50,6 +56,7 @@
 							class="fs_12 cake_pink text-center position-absolute bottom-0"></error-message>
 					</v-form>
 
+					{% endif %}
 					{% verbatim %}
 					<div
 						class="modal-footer d-flex flex-column justify-content-between align-items-center text-center border-0 mx-5">
@@ -59,7 +66,6 @@
 						<a href="#" v-if="Step === `Code`" @click.prevent="ToRegStep1"
 							class="text-decoration-none cake_pink fs_12">изменить данные</a>
 					</div>
-
 					{% endverbatim %}
 				</div>
 			</div>

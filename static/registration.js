@@ -18,8 +18,7 @@ Vue.createApp({
                     if (!value) {
                         return true;
                     }
-                    if ( !regex.test(value)) {
-
+                    if (!regex.test(value)) {
                         return '⚠ Формат телефона нарушен';
                     }
                     return true;
@@ -29,8 +28,7 @@ Vue.createApp({
                     if (!value) {
                         return true;
                     }
-                    if ( !regex.test(value)) {
-
+                    if (!regex.test(value)) {
                         return '⚠ Формат кода нарушен';
                     }
                     return true;
