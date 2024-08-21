@@ -6,7 +6,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, phone_number, password=None, **extra_fields):
-        print("create user is called")
         if not phone_number:
             raise ValueError("Необходимо ввести номер телефона")
         if not password:
