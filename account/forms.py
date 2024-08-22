@@ -1,6 +1,6 @@
 from django import forms
 from django.urls import reverse_lazy
-from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.forms import UserChangeForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from .models import CustomUser
 
