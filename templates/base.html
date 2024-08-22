@@ -59,8 +59,10 @@
                             <span
                                 class="position-absolute translate-middle badge rounded-pill cake__bg_pink fs_8 d-none">1</span>
                         </a>
-                        <a class="nav-link fw-lighter cake_grey fs_12 d-none" href="#">
-                            Ирина
+                        <a class="nav-link fw-lighter cake_grey fs_12" d-none href="{% url 'profile' %}">
+                            {% if user.name %}
+                            {{ user.name }}
+                            {% endif %}
                         </a>
                     </li>
                 </ul>
@@ -110,29 +112,32 @@
     <script src="{% static 'index.js' %}"></script>
     <script src="{% static 'registration.js' %}"></script>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
-
-            const formData = new FormData(this);
-
-            fetch(this.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-                },
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        document.querySelector("#error-message").innerText = data.error;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.querySelector('#loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function (event) {
+                    event.preventDefault(); // Prevent the default form submission
+                    const formData = new FormData(this);
+                    fetch(this.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                        },
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                location.reload();
+                            } else {
+                                document.querySelector("#error-message").innerText = data.error;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
                 });
+            }
         });
     </script>
 </body>

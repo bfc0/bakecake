@@ -41,3 +41,10 @@ class JsLoginView(LoginView):
     def form_valid(self, form):
         login(self.request, form.get_user())
         return JsonResponse({'success': True})
+
+
+class ProfileView(View):
+    template_name = "lk.html"
+
+    def get(self, request):
+        return render(request, "lk.html")
