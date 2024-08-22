@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
+from django.db import models
+
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -50,3 +53,201 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                     "Пользователь с таким почтовым адресом уже существует")
 
         super().save(*args, **kwargs)
+
+
+class Event(models.Model):
+    name = models.TextField(blank=False,
+                            null=False,
+                            verbose_name='Название')
+
+    def __str__(self):
+        return self.name
+
+
+class Level(models.Model):
+    name = models.TextField(blank=False,
+                            null=False,
+                            verbose_name='Количество уровней')
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+
+    def __str__(self):
+        return self.name
+
+
+class Shape(models.Model):
+    name = models.TextField(blank=False,
+                            null=False,
+                            verbose_name='Форма')
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+
+    def __str__(self):
+        return self.name
+
+
+class Topping(models.Model):
+    name = models.TextField(blank=False,
+                            null=False,
+                            verbose_name='Топпинг')
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+
+    def __str__(self):
+        return self.name
+
+
+class Berry(models.Model):
+    name = models.TextField(blank=False,
+                            null=False,
+                            verbose_name='Ягоды')
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+
+    def __str__(self):
+        return self.name
+
+
+class Decoration(models.Model):
+    name = models.TextField(blank=False,
+                            null=False,
+                            verbose_name='Декор')
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+
+    def __str__(self):
+        return self.name
+
+
+class CatalogueCake(models.Model):
+    name = models.TextField(blank=False,
+                            null=False,
+                            verbose_name='Название')
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+    event = models.ForeignKey(Event,
+                              blank=True,
+                              null=True,
+                              on_delete=models.SET_NULL,
+                              related_name='cakes',
+                              verbose_name='Повод')
+    image = models.ImageField(blank=True,
+                              null=True,
+                              verbose_name='Изображение',
+                              upload_to='media')
+
+    def __str__(self):
+        return self.name
+
+
+class CustomCake(models.Model):
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+    title = models.TextField(blank=True,
+                             null=False,
+                             default='',
+                             verbose_name='Надпись')
+    level = models.ForeignKey(Level,
+                              blank=False,
+                              null=False,
+                              on_delete=models.CASCADE,
+                              related_name='cakes',
+                              verbose_name='Количество уровней')
+    shape = models.ForeignKey(Shape,
+                              blank=False,
+                              null=False,
+                              on_delete=models.CASCADE,
+                              related_name='cakes',
+                              verbose_name='Форма')
+    topping = models.ForeignKey(Topping,
+                                blank=False,
+                                null=False,
+                                on_delete=models.CASCADE,
+                                related_name='cakes',
+                                verbose_name='Топпинг')
+    berry = models.ForeignKey(Berry,
+                              blank=False,
+                              null=False,
+                              on_delete=models.CASCADE,
+                              related_name='cakes',
+                              verbose_name='Ягоды')
+    decoration = models.ForeignKey(Decoration,
+                                   blank=False,
+                                   null=False,
+                                   on_delete=models.CASCADE,
+                                   related_name='cakes',
+                                   verbose_name='Декор')
+
+    def __str__(self):
+        return f"Кастомный торт {self.id}"
+
+
+class OrderStatus(models.Model):
+    name = models.TextField(blank=False,
+                            null=False,
+                            verbose_name='Название')
+
+    def __str__(self):
+        return self.name
+
+
+class Order(models.Model):
+    content_type = models.ForeignKey(ContentType,
+                                     on_delete=models.CASCADE,
+                                     limit_choices_to={"model__in":
+                                                       ('CatalogueCake',
+                                                        'CustomCake')})
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    customer = models.ForeignKey(CustomUser,
+                                 blank=False,
+                                 null=False,
+                                 on_delete=models.CASCADE,
+                                 related_name='ordrs',
+                                 verbose_name='Клиент')
+    status = models.ForeignKey(OrderStatus,
+                               blank=False,
+                               null=False,
+                               on_delete=models.CASCADE,
+                               related_name='orders',
+                               verbose_name='Статус')
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+    comment = models.TextField(blank=True,
+                               null=False,
+                               default='',
+                               verbose_name='Комментарий')
+    address = models.TextField(blank=True,
+                               null=False,
+                               default='',
+                               verbose_name='Комментарий')
+    customer_name = models.TextField(blank=True,
+                                     null=False,
+                                     default='',
+                                     verbose_name='Имя')
+    phone_number = models.TextField(blank=True,
+                                    null=False,
+                                    default='',
+                                    verbose_name='Номер телефона')
+    email = models.TextField(blank=True,
+                             null=False,
+                             default='',
+                             verbose_name='Почта')
+    date_created = models.DateTimeField(auto_now_add=True,
+                                        verbose_name='Создано')
+    date_modified = models.DateTimeField(blank=True,
+                                         null=True,
+                                         auto_now=True,
+                                         verbose_name='Изменено')
+    date_delivered = models.DateTimeField(blank=True,
+                                          null=True,
+                                          verbose_name='Доставлено')
