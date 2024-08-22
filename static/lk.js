@@ -7,16 +7,22 @@ Vue.createApp({
     data() {
         return {
             Edit: false,
-            Name: 'Ирина',
-            Phone: '8 909 000-00-00',
-            Email: 'nyam@gmail.com',
+            Name: userData.name,
+            Phone: userData.phone_number,
+            Email: userData.email,
+            formError: formError || null,
+            originalData: {
+                name: userData.name,
+                phone: userData.phone_number,
+                email: userData.email,
+            },
             Schema: {
                 name_format: (value) => {
                     const regex = /^[a-zA-Zа-яА-я]+$/
                     if (!value) {
                         return '⚠ Поле не может быть пустым';
                     }
-                    if ( !regex.test(value)) {
+                    if (!regex.test(value)) {
 
                         return '⚠ Недопустимые символы в имени';
                     }
@@ -27,7 +33,7 @@ Vue.createApp({
                     if (!value) {
                         return '⚠ Поле не может быть пустым';
                     }
-                    if ( !regex.test(value)) {
+                    if (!regex.test(value)) {
 
                         return '⚠ Формат телефона нарушен';
                     }
@@ -38,7 +44,7 @@ Vue.createApp({
                     if (!value) {
                         return '⚠ Поле не может быть пустым';
                     }
-                    if ( !regex.test(value)) {
+                    if (!regex.test(value)) {
 
                         return '⚠ Формат почты нарушен';
                     }
@@ -51,6 +57,21 @@ Vue.createApp({
         ApplyChanges() {
             this.Edit = false
             this.$refs.HiddenFormSubmit.click()
+        },
+        handleError(error) {
+            this.formError = error;
+            this.resetForm();
+        },
+        resetForm() {
+            this.Name = this.originalData.name;
+            this.Phone = this.originalData.phone;
+            this.Email = this.originalData.email;
+        },
+
+    },
+    mounted() {
+        if (this.formError) {
+            this.handleError(this.formError);
         }
     }
 }).mount('#LK')

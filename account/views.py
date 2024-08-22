@@ -4,7 +4,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm
+from phonenumber_field.phonenumber import PhoneNumber
 
 
 class RegisterView(View):
@@ -43,8 +46,31 @@ class JsLoginView(LoginView):
         return JsonResponse({'success': True})
 
 
+@method_decorator(login_required, name="dispatch")
 class ProfileView(View):
     template_name = "lk.html"
 
     def get(self, request):
-        return render(request, "lk.html")
+        return render(request, self.template_name)
+
+    def post(self, request):
+        name = request.POST.get('NAME')
+        phone = request.POST.get('PHONE')
+        email = request.POST.get('EMAIL')
+
+        try:
+            phone_number = PhoneNumber.from_string(phone)
+            if not phone_number.is_valid():
+                return render(request, self.template_name, {'error': 'Invalid phone number'})
+
+            user = request.user
+            user.name = name
+            user.phone_number = phone_number
+            user.email = email
+            user.save()
+
+        except Exception as e:
+            user.refresh_from_db()
+            return render(request, self.template_name, {'error': "Failed to update user"})
+
+        return render(request, self.template_name, {'success': 'Profile updated successfully'})
