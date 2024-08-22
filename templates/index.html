@@ -15,9 +15,9 @@
 						<label for="id_username" class="modal-title font_Gogh fs_40 cake_blue" id="RegModalLabel">Вход /
 							Регистрация</label>
 					</div>
-					{% if user %}
+					{% if userdata %}
 					<div>
-						<p>Hello {{ user.name }} ({{ user.phone_number }})</p>
+						<p>Hello {{ userdata.name }} ({{ userdata.phone_number }})</p>
 						<p>You can <a href="{% url 'logout' %}">Logout</a></p>
 					</div>
 					{% else %}

@@ -60,8 +60,8 @@
                                 class="position-absolute translate-middle badge rounded-pill cake__bg_pink fs_8 d-none">1</span>
                         </a>
                         <a class="nav-link fw-lighter cake_grey fs_12" d-none href="{% url 'profile' %}">
-                            {% if user.name %}
-                            {{ user.name }}
+                            {% if userdata.name %}
+                            {{ userdata.name }}
                             {% endif %}
                         </a>
                     </li>

@@ -8,4 +8,4 @@ def user_context(request):
             "name": request.user.name if request.user.name else "Customer",
         }
 
-    return {"user": user}
+    return {"userdata": user}
