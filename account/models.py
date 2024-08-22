@@ -60,6 +60,10 @@ class Event(models.Model):
                             null=False,
                             verbose_name='Название')
 
+    class Meta:
+        verbose_name = 'Повод'
+        verbose_name_plural = 'Поводы'
+
     def __str__(self):
         return self.name
 
@@ -71,6 +75,10 @@ class Level(models.Model):
     price = models.FloatField(blank=False,
                               null=False,
                               verbose_name='Цена')
+
+    class Meta:
+        verbose_name = 'Количество уровней'
+        verbose_name_plural = 'Количество уровней'
 
     def __str__(self):
         return self.name
@@ -84,6 +92,10 @@ class Shape(models.Model):
                               null=False,
                               verbose_name='Цена')
 
+    class Meta:
+        verbose_name = 'Форма'
+        verbose_name_plural = 'Формы'
+
     def __str__(self):
         return self.name
 
@@ -95,6 +107,10 @@ class Topping(models.Model):
     price = models.FloatField(blank=False,
                               null=False,
                               verbose_name='Цена')
+
+    class Meta:
+        verbose_name = 'Топпинг'
+        verbose_name_plural = 'Топпинги'
 
     def __str__(self):
         return self.name
@@ -108,6 +124,10 @@ class Berry(models.Model):
                               null=False,
                               verbose_name='Цена')
 
+    class Meta:
+        verbose_name = 'Ягоды'
+        verbose_name_plural = 'Ягоды'
+
     def __str__(self):
         return self.name
 
@@ -119,6 +139,10 @@ class Decoration(models.Model):
     price = models.FloatField(blank=False,
                               null=False,
                               verbose_name='Цена')
+
+    class Meta:
+        verbose_name = 'Декор'
+        verbose_name_plural = 'Декор'
 
     def __str__(self):
         return self.name
@@ -141,6 +165,10 @@ class CatalogueCake(models.Model):
                               null=True,
                               verbose_name='Изображение',
                               upload_to='media')
+
+    class Meta:
+        verbose_name = 'Готовый торт'
+        verbose_name_plural = 'Готовые торты'
 
     def __str__(self):
         return self.name
@@ -185,6 +213,10 @@ class CustomCake(models.Model):
                                    related_name='cakes',
                                    verbose_name='Декор')
 
+    class Meta:
+        verbose_name = 'Кастомный торт'
+        verbose_name_plural = 'Кастомные торты'
+
     def __str__(self):
         return f"Кастомный торт {self.id}"
 
@@ -194,6 +226,10 @@ class OrderStatus(models.Model):
                             null=False,
                             verbose_name='Название')
 
+    class Meta:
+        verbose_name = 'Статус заказа'
+        verbose_name_plural = 'Статусы заказа'
+
     def __str__(self):
         return self.name
 
@@ -201,10 +237,11 @@ class OrderStatus(models.Model):
 class Order(models.Model):
     content_type = models.ForeignKey(ContentType,
                                      on_delete=models.CASCADE,
+                                     verbose_name='Тип торта',
                                      limit_choices_to={"model__in":
-                                                       ('CatalogueCake',
-                                                        'CustomCake')})
-    object_id = models.PositiveIntegerField()
+                                                       ("cataloguecake",
+                                                        "customcake")})
+    object_id = models.PositiveIntegerField(verbose_name='ID торта')
     content_object = GenericForeignKey("content_type", "object_id")
 
     customer = models.ForeignKey(CustomUser,
@@ -251,3 +288,13 @@ class Order(models.Model):
     date_delivered = models.DateTimeField(blank=True,
                                           null=True,
                                           verbose_name='Доставлено')
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
+
+    def __str__(self):
+        return f"Заказ #{self.id}"

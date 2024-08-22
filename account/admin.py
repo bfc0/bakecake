@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser
+from .models import (CustomUser, Order, OrderStatus, CatalogueCake,
+                     CustomCake, Level, Shape, Topping, Berry, Decoration,
+                     Event)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -28,3 +30,13 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Order)
+admin.site.register(OrderStatus)
+admin.site.register(CatalogueCake)
+admin.site.register(CustomCake)
+admin.site.register(Level)
+admin.site.register(Shape)
+admin.site.register(Topping)
+admin.site.register(Berry)
+admin.site.register(Decoration)
+admin.site.register(Event)
