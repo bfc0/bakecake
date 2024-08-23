@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from .models import Order
 from cakes.models import Visit, CartAddition, Order
 
 

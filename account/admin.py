@@ -30,13 +30,3 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Order)
-admin.site.register(OrderStatus)
-admin.site.register(CatalogueCake)
-admin.site.register(CustomCake)
-admin.site.register(Level)
-admin.site.register(Shape)
-admin.site.register(Topping)
-admin.site.register(Berry)
-admin.site.register(Decoration)
-admin.site.register(Event)
