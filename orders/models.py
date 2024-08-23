@@ -64,6 +64,9 @@ class Order(models.Model):
     date_delivered = models.DateTimeField(blank=True,
                                           null=True,
                                           verbose_name='Доставлено')
+    preferred_date = models.DateTimeField(blank=True,
+                                          null=True,
+                                          verbose_name='Предпочтительная дата')
 
     class Meta:
         verbose_name = 'Заказ'
