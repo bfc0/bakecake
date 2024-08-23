@@ -4,20 +4,16 @@ from django.contrib.contenttypes.models import ContentType
 from account.models import CustomUser
 
 
-class OrderStatus(models.Model):
-    name = models.TextField(blank=False,
-                            null=False,
-                            verbose_name='Название')
-
-    class Meta:
-        verbose_name = 'Статус заказа'
-        verbose_name_plural = 'Статусы заказа'
-
-    def __str__(self):
-        return self.name
-
-
 class Order(models.Model):
+    STATUS = (
+        ('NEW', 'Неоплачен'),
+        ('PAY', 'Оплачен'),
+        ('ACC', 'Принят'),
+        ('PREP', 'Готовится'),
+        ('OUT', 'Передан в доставку'),
+        ('COMP', 'Выполнен'),
+        ('CANC', 'Отменен'),
+    )
     content_type = models.ForeignKey(ContentType,
                                      on_delete=models.CASCADE,
                                      verbose_name='Тип торта',
@@ -34,12 +30,8 @@ class Order(models.Model):
                                  on_delete=models.CASCADE,
                                  related_name='customer_orders',
                                  verbose_name='Клиент')
-    status = models.ForeignKey(OrderStatus,
-                               blank=False,
-                               null=False,
-                               on_delete=models.CASCADE,
-                               related_name='orders',
-                               verbose_name='Статус')
+
+    status = models.CharField(max_length=4, choices=STATUS, default='NEW')
     price = models.FloatField(blank=False,
                               null=False,
                               verbose_name='Цена')
