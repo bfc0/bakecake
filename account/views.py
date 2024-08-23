@@ -1,4 +1,6 @@
+import json
 from django.contrib.auth import login
+from django.forms import model_to_dict
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
@@ -51,6 +53,12 @@ class ProfileView(View):
     template_name = "lk.html"
 
     def get(self, request):
+        u = {
+            "phone_number": str(request.user.phone_number),
+            "email": request.user.email,
+            "name": request.user.name
+        }
+
         return render(request, self.template_name)
 
     def post(self, request):
@@ -73,4 +81,4 @@ class ProfileView(View):
             user.refresh_from_db()
             return render(request, self.template_name, {'error': "Failed to update user"})
 
-        return render(request, self.template_name, {'success': 'Profile updated successfully'})
+        return render(request, self.template_name)

@@ -87,7 +87,7 @@
 	</div>
 </div>
 <script>
-	const userData = {{ userdata| safe }};
+	const userData = JSON.parse("{{ user_jsondata|escapejs }}");
 	const formError = "{{ error|escapejs }}";
 </script>
 <script src="{% static 'lk.js' %}"></script>

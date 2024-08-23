@@ -1,3 +1,5 @@
+import json
+
 
 def user_context(request):
     user = None
@@ -8,4 +10,4 @@ def user_context(request):
             "name": request.user.name if request.user.name else "Customer",
         }
 
-    return {"userdata": user}
+    return {"userdata": user, "user_jsondata": json.dumps(user)}
