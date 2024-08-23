@@ -33,4 +33,4 @@ class OrderSerializer(ModelSerializer):
     class Meta:
         model = Order
         fields = ("price", "phone_number", "email",
-                  "object_id", "content_object", "content_type", "customer", "address", "comment")
+                  "object_id", "content_object", "content_type", "customer", "address", "comment", "preferred_date")

@@ -103,7 +103,7 @@ def register_order(request):
             "content_object": cake,
             "price": cake.price,
             "customer": request.user.id,
-            "prefered_time": desired_dt,
+            "preferred_date": desired_dt,
             ** request.data,
         }
         serializer = OrderSerializer(data=data)
