@@ -1,5 +1,9 @@
 from django.shortcuts import render
+from django.views import View
 from cakes.models import CartAddition, Order
+from cakes.models import (
+    Shape, Topping, Berry, Decoration, Level, Event, CustomCake, CatalogueCake
+)
 
 
 def add_to_cart(request, product):
@@ -24,3 +28,12 @@ def create_order(request, total_amount):
     Order.objects.create(user=user,
                          session_key=session_key,
                          total_amount=total_amount)
+
+
+class IndexView(View):
+    def setup(self):
+        context = {
+            "decorations": {
+
+            }
+        }
