@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
 
 
 class Event(models.Model):
@@ -165,3 +167,32 @@ class CustomCake(models.Model):
 
     def __str__(self):
         return f"Кастомный торт {self.id}"
+
+
+class Visit(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.SET_NULL,
+                             null=True,
+                             blank=True)
+    session_key = models.CharField(max_length=40)
+    timestamp = models.DateTimeField(default=timezone.now)
+
+
+class CartAddition(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.SET_NULL,
+                             null=True,
+                             blank=True)
+    session_key = models.CharField(max_length=40)
+    product_name = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(default=timezone.now)
+
+
+class Order(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.SET_NULL,
+                             null=True,
+                             blank=True)
+    session_key = models.CharField(max_length=40)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    timestamp = models.DateTimeField(default=timezone.now)
