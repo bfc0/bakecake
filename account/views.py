@@ -1,10 +1,11 @@
 import json
 from django.contrib.auth import login
 from django.forms import model_to_dict
-from django.http import JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -50,19 +51,25 @@ class JsLoginView(LoginView):
         return JsonResponse({'success': True})
 
 
-@method_decorator(login_required, name="dispatch")
-class ProfileView(View):
+# @method_decorator(login_required, name="dispatch")
+class ProfileView(LoginRequiredMixin, View):
     template_name = "lk.html"
+    login_url = "login"
 
     def setup(self, request, *args, **kwargs):
+
+        super().setup(request, *args, **kwargs)
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+
         orders = Order.objects.filter(customer=request.user).all()
         serialized_orders = [order.serialize() for order in orders]
         self.context = {
             "orders": serialized_orders,
         }
-        super().setup(request, *args, **kwargs)
 
     def get(self, request):
+
         u = {
             "phone_number": str(request.user.phone_number),
             "email": request.user.email,
