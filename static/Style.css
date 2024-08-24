@@ -174,3 +174,58 @@ li .cake__textinput:read-only {
 .z-index-1 {
     z-index: -1;
 }
+
+
+.catalogue-list {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%; 
+    /* justify-content: center;
+    /* align-items: center; */
+    /* margin: 50px 0; */
+
+}
+
+.cataloguecake-card {
+    width: 45%;
+    margin: 15px;
+    float: left;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    padding-top: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.22);
+    transition: .4s;
+}
+
+.cataloguecake-card-image {
+    width: 300px;
+    height: 300px;
+    padding-top: 10px;
+    text-align: center;
+    margin: 10px auto;
+    display: block;
+    object-fit: contain;
+}
+
+.cataloguecake-title {
+    text-align: center;
+}
+
+.cataloguecake-event {
+    color: #DA87A9;
+}
+
+.cataloguecake-description {
+    text-align: center;
+    margin: 10px 10px 10px 10px;
+}
+
+.cataloguecake-price {
+    text-align: center;
+}
+
+.cataloguecake-button {
+    margin: 0 0 20px 0;
+}
