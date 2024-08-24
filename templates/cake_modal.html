@@ -1,0 +1,23 @@
+<aside class="modal fade" id="OrderModal{{order.id}}" tabindex="-1" aria-labelledby="ModalLabel{{ order.id }}"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title cake_pink" id="ModalLabel{{ order.id }}">{{ order.cake.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span class="cake_blue">Уровней: {{ order.cake.level }}</span><br>
+                <span class="cake_blue">Форма: {{ order.cake.shape }}</span><br>
+                <span class="cake_blue">Топпинг: {{ order.cake.topping }}</span><br>
+                <span class="cake_blue">Ягоды: {{ order.cake.berry }}</span><br>
+                <span class="cake_blue">Декор: {{ order.cake.decoration }}</span><br>
+                <span class="cake_blue">{{ order.cake.title }}</span><br>
+                <span class="cake_pink">Цена: {{ order.cake.price }}</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <span class="cake_blue">Статус: {{ order.status }}</span>
+            </div>
+        </div>
+    </div>
+</aside>

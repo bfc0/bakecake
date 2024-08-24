@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
-from orders.views import IndexView,  register_order
+from orders.views import IndexView,  register_order, OrderListView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -10,7 +10,7 @@ urlpatterns = [
     path("", IndexView.as_view(), name="index"),
     path("api/order/", register_order, name="order"),
     path("cakes/", include("cakes.urls")),
-
+    path("manager/", OrderListView.as_view(), name="manager"),
 ]
 
 if settings.DEBUG:

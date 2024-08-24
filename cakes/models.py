@@ -171,7 +171,19 @@ class CustomCake(models.Model):
         verbose_name_plural = 'Кастомные торты'
 
     def __str__(self):
-        return f"Кастомный торт {self.id}"
+        return f"Кастомный торт #{self.id}"
+
+    def serialize(self):
+        return {
+            "name": str(self),
+            "price": self.price,
+            "title": self.title if self.title else "Без надписи",
+            "level": self.level.name,
+            "shape": self.shape.name,
+            "topping": self.topping.name,
+            "berry": self.berry.name,
+            "decoration": self.decoration.name,
+        }
 
 
 class Visit(models.Model):

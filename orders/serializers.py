@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, CharField
 from cakes.models import CustomCake
 from orders.models import Order
 INSCRIPTION_PRICE = 500
@@ -29,8 +29,7 @@ class CakeSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-
     class Meta:
         model = Order
         fields = ("price", "phone_number", "email",
-                  "object_id", "content_object", "content_type", "customer", "address", "comment", "preferred_date")
+                  "object_id", "content_object", "content_type", "customer", "address", "comment", "preferred_date", "customer_name")

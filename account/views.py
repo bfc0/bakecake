@@ -1,15 +1,18 @@
 import json
 from django.contrib.auth import login
 from django.forms import model_to_dict
-from django.http import JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm
 from phonenumber_field.phonenumber import PhoneNumber
+
+from orders.models import Order
 
 
 class RegisterView(View):
@@ -48,18 +51,32 @@ class JsLoginView(LoginView):
         return JsonResponse({'success': True})
 
 
-@method_decorator(login_required, name="dispatch")
-class ProfileView(View):
+# @method_decorator(login_required, name="dispatch")
+class ProfileView(LoginRequiredMixin, View):
     template_name = "lk.html"
+    login_url = "login"
+
+    def setup(self, request, *args, **kwargs):
+
+        super().setup(request, *args, **kwargs)
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+
+        orders = Order.objects.filter(customer=request.user).all()
+        serialized_orders = [order.serialize() for order in orders]
+        self.context = {
+            "orders": serialized_orders,
+        }
 
     def get(self, request):
+
         u = {
             "phone_number": str(request.user.phone_number),
             "email": request.user.email,
             "name": request.user.name
         }
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, self.context)
 
     def post(self, request):
         name = request.POST.get('NAME')
@@ -69,7 +86,8 @@ class ProfileView(View):
         try:
             phone_number = PhoneNumber.from_string(phone)
             if not phone_number.is_valid():
-                return render(request, self.template_name, {'error': 'Invalid phone number'})
+                self.context["error"] = "Invalid phone number"
+                return render(request, self.template_name, self.context)
 
             user = request.user
             user.name = name
@@ -79,6 +97,7 @@ class ProfileView(View):
 
         except Exception as e:
             user.refresh_from_db()
-            return render(request, self.template_name, {'error': "Failed to update user"})
+            self.context["error"] = "Failed to update user"
+            return render(request, self.template_name, self.context)
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, self.context)

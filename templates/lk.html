@@ -73,10 +73,51 @@
 				{% endverbatim %}
 			</v-form>
 			<h2 class="fs_40 cake_pink mt-5">Мои заказы</h2>
+			{% if orders %}
+			{% for order in orders %}
+			<section class="my-2">
+				<span class="cake_blue lk__order d-flex" data-bs-toggle="modal"
+					data-bs-target="#OrderModal{{order.id}}">
+					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+						class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+						<path
+							d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+					</svg>
+					<span class="ms-1">{{ order.cake.name }}</span>
+				</span>
+				<aside class="modal fade" id="OrderModal{{order.id}}" tabindex="-1" aria-labelledby="ModalLabel1"
+					aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title cake_pink" id="ModalLabel1">{{ order.cake.name }}</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<span class="cake_blue">Уровней: {{ order.cake.level }}</span><br>
+								<span class="cake_blue">Форма: {{ order.cake.shape }}</span><br>
+								<span class="cake_blue">Топпинг: {{ order.cake.topping }}</span><br>
+								<span class="cake_blue">Ягоды: {{ order.cake.berry }}</span><br>
+								<span class="cake_blue">Декор: {{ order.cake.decoration }}</span><br>
+								<span class="cake_blue">{{ order.cake.title }}</span><br>
+								<span class="cake_pink">Цена: {{ order.cake.price }}</span>
+							</div>
+							<div class="modal-footer d-flex justify-content-between">
+								<span class="cake_blue">Статус: {{ order.status }}</span>
+								<span class="cake_blue">Время доставки: ?</span>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</section>
+			{% endfor %}
+			{% else %}
 			<span class="cake_grey">У вас еще нет заказов.</span>
 			<p class="cake_grey">Вы можете добавить торт из <a href="{% url 'index' %}#step2"
 					class="text-decoration-none cake_pink">Каталога</a> или <a href="{% url 'index' %}#step3"
 					class="text-decoration-none cake_pink">Создать свой</a>.</p>
+			{% endif %}
 			<span class="cake_grey">Есть вопросы?</span>
 			<span class="cake_grey">Воспользуйтесь нашим <a href="https://vk.com/devmanorg"
 					class="text-decoration-none cake_pink">чат-ботом</a>.</span>
