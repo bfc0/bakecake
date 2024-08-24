@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from django.urls import include, path
 from django.conf.urls.static import static
-from orders.views import IndexView,  register_order
+from orders.views import IndexView,  register_order, OrderListView
 
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
     path("account/", include("account.urls")),
     path("", IndexView.as_view(), name="index"),
     path("api/order/", register_order, name="order"),
+    path("manager/", OrderListView.as_view(), name="manager"),
 ]
 
 if settings.DEBUG:

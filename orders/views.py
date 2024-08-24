@@ -1,16 +1,21 @@
 from datetime import datetime
 import logging
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.views import View
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from account.models import CustomUser
-from cakes.models import CartAddition, Order
+from cakes.models import CartAddition
+from cakes.models import Order as StatsOrder
 from orders.serializers import CakeSerializer, OrderSerializer
+from orders.models import Order
 
 
 def add_to_cart(request, product):
@@ -32,9 +37,9 @@ def create_order(request, total_amount):
     session_key = request.session.session_key
     user = request.user if request.user.is_authenticated else None
 
-    Order.objects.create(user=user,
-                         session_key=session_key,
-                         total_amount=total_amount)
+    StatsOrder.objects.create(user=user,
+                              session_key=session_key,
+                              total_amount=total_amount)
 
 
 class IndexView(View):
@@ -80,7 +85,7 @@ def register_order(request):
         if not request.user.is_authenticated:
             user = CustomUser.objects.create_user(
                 phone_number=request.data["phone"],
-                name=request.data["name"],
+                name=request.data["customer_name"],
                 email=request.data["email"],
             )
             login(request, user)
@@ -115,3 +120,18 @@ def register_order(request):
         logging.error(e)
         return Response({"error": "Ошибка при добавлении заказа"}, status=400)
     return Response(response_data, status=201)
+
+
+class OrderListView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = "manager.html"
+
+    def get_queryset(self) -> QuerySet:
+        return Order.objects.order_by("-date_created")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orders = self.get_queryset()
+        serialized = [o.serialize for o in orders]
+        context["orders"] = serialized
+        return context

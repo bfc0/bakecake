@@ -76,7 +76,8 @@
 			{% if orders %}
 			{% for order in orders %}
 			<section class="my-2">
-				<span class="cake_blue lk__order d-flex" data-bs-toggle="modal" data-bs-target="#OrderModal1">
+				<span class="cake_blue lk__order d-flex" data-bs-toggle="modal"
+					data-bs-target="#OrderModal{{order.id}}">
 					<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
 						class="bi bi-check-circle-fill" viewBox="0 0 16 16">
 						<path
@@ -84,7 +85,7 @@
 					</svg>
 					<span class="ms-1">{{ order.cake.name }}</span>
 				</span>
-				<aside class="modal fade" id="OrderModal1" tabindex="-1" aria-labelledby="ModalLabel1"
+				<aside class="modal fade" id="OrderModal{{order.id}}" tabindex="-1" aria-labelledby="ModalLabel1"
 					aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">

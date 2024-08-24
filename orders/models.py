@@ -45,7 +45,7 @@ class Order(models.Model):
                                null=False,
                                default='',
                                max_length=200,
-                               verbose_name='Комментарий')
+                               verbose_name='Адрес')
     customer_name = models.CharField(blank=True,
                                      null=False,
                                      default='',
@@ -85,9 +85,15 @@ class Order(models.Model):
         return f"Заказ #{self.id}"
 
     def serialize(self):
+        pd = self.preferred_date
         return {
+            "id": self.id,
             "cake": self.content_object.serialize(),
             "status": self.get_status_display(),
             "price": str(self.price),
-            "preferred_date": self.preferred_date.strftime("%d-%m-%y %H:%M"),
+            "phone_number": self.phone_number,
+            "customer_name": self.customer_name,
+            "address": self.address,
+            "comment": self.comment,
+            "preferred_date": pd.strftime("%d-%m-%y %H:%M") if pd else "",
         }
