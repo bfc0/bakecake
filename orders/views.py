@@ -113,5 +113,5 @@ def register_order(request):
         response_data.pop("content_object", None)
     except Exception as e:
         logging.error(e)
-        raise
+        return Response({"error": "Ошибка при добавлении заказа"}, status=400)
     return Response(response_data, status=201)

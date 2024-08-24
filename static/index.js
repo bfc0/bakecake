@@ -130,7 +130,8 @@ Vue.createApp({
             Address: null,
             Dates: null,
             Time: null,
-            DelivComments: ''
+            DelivComments: '',
+            errorMessage: '',
         }
     },
     methods: {
@@ -171,10 +172,13 @@ Vue.createApp({
                 });
 
                 const result = await response.json();
+                console.log(result)
 
                 if (response.ok) {
                     console.log('Form submitted successfully:', result);
+                    window.location.href = "/account/profile";
                 } else {
+                    this.errorMessage = result.error || "Неизвестная ошибка"
                     console.error('Error submitting form:', result);
                 }
             } catch (error) {

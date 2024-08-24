@@ -328,7 +328,11 @@
 								<error-message name="time" class="from__alert"></error-message>
 							</span>
 						</div>
-
+						{% verbatim %}
+						<div v-if="errorMessage" class="error-message alert alert-danger mt-3">
+							{{ errorMessage }}
+						</div>
+						{% endverbatim %}
 						<div class="row">
 							<div class="col-6 col-lg-4 d-flex flex-column">
 								<label for="address" class="my-1 fs_40 cake_blue">Адрес</label>
