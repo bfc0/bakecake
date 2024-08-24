@@ -100,19 +100,24 @@ class CatalogueCake(models.Model):
     name = models.TextField(blank=False,
                             null=False,
                             verbose_name='Название')
-    price = models.FloatField(blank=False,
-                              null=False,
-                              verbose_name='Цена')
     event = models.ForeignKey(Event,
                               blank=True,
                               null=True,
                               on_delete=models.SET_NULL,
                               related_name='cakes',
                               verbose_name='Повод')
+    description = models.TextField(blank=True,
+                                   null=False,
+                                   default='',
+                                   verbose_name='Описание')
+    price = models.FloatField(blank=False,
+                              null=False,
+                              verbose_name='Цена')
+
     image = models.ImageField(blank=True,
                               null=True,
                               verbose_name='Изображение',
-                              upload_to='media')
+                              upload_to="static/img")
 
     class Meta:
         verbose_name = 'Готовый торт'

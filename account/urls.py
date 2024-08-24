@@ -2,6 +2,7 @@ from django.urls import path
 from django.contrib.auth.views import LogoutView
 from .views import (CustomLoginView, RegisterView, CustomLogoutView,
                     JsLoginView, ProfileView)
+from orders.views import IndexView
 
 
 urlpatterns = [
@@ -9,5 +10,6 @@ urlpatterns = [
     path("profile/", ProfileView.as_view(), name="profile"),
     path("register/", RegisterView.as_view(), name="register"),
     path("logout/", CustomLogoutView.as_view(next_page="index"), name="logout"),
-    path("jslogin/", JsLoginView.as_view(), name="jslogin")
+    path("jslogin/", JsLoginView.as_view(), name="jslogin"),
+    path("", IndexView.as_view(), name="index"),
 ]

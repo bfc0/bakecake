@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container mt-header mb-5">
+<article class="row row pt-header d-flex justify-content-center">
+    <div class="catalogue-list">
+        {% for cake in cakes %}
+            <div class="cataloguecake-card">
+                <img class="cataloguecake-card-image" src="{{cake.image_url}}" alt="">
+                <h3 class='cataloguecake-title'>{{cake.name}}</h3>
+                <p class='cataloguecake-event'>{{cake.event}}</p>
+                <p class='cataloguecake-description cake_grey'>{{cake.description}}</p>
+                <h5 class='cataloguecake-price'>{{cake.price}} руб.</h5>
+                <a href="" class="cataloguecake-button btn text-white rounded-pill px-5 mt-3 shadow-none cake__button cake__bg_pink">Заказать</a>
+            </div>
+        {% endfor %}
+    
+    </div>
+</article>
+</div>
+
+{% endblock %}
