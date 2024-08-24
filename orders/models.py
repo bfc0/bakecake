@@ -83,3 +83,11 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Заказ #{self.id}"
+
+    def serialize(self):
+        return {
+            "cake": self.content_object.serialize(),
+            "status": self.get_status_display(),
+            "price": str(self.price),
+            "preferred_date": self.preferred_date.strftime("%d-%m-%y %H:%M"),
+        }

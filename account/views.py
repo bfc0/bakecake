@@ -11,6 +11,8 @@ from django.utils.decorators import method_decorator
 from .forms import CustomUserCreationForm
 from phonenumber_field.phonenumber import PhoneNumber
 
+from orders.models import Order
+
 
 class RegisterView(View):
     def get(self, request):
@@ -52,6 +54,14 @@ class JsLoginView(LoginView):
 class ProfileView(View):
     template_name = "lk.html"
 
+    def setup(self, request, *args, **kwargs):
+        orders = Order.objects.filter(customer=request.user).all()
+        serialized_orders = [order.serialize() for order in orders]
+        self.context = {
+            "orders": serialized_orders,
+        }
+        super().setup(request, *args, **kwargs)
+
     def get(self, request):
         u = {
             "phone_number": str(request.user.phone_number),
@@ -59,7 +69,7 @@ class ProfileView(View):
             "name": request.user.name
         }
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, self.context)
 
     def post(self, request):
         name = request.POST.get('NAME')
@@ -69,7 +79,8 @@ class ProfileView(View):
         try:
             phone_number = PhoneNumber.from_string(phone)
             if not phone_number.is_valid():
-                return render(request, self.template_name, {'error': 'Invalid phone number'})
+                self.context["error"] = "Invalid phone number"
+                return render(request, self.template_name, self.context)
 
             user = request.user
             user.name = name
@@ -79,6 +90,7 @@ class ProfileView(View):
 
         except Exception as e:
             user.refresh_from_db()
-            return render(request, self.template_name, {'error': "Failed to update user"})
+            self.context["error"] = "Failed to update user"
+            return render(request, self.template_name, self.context)
 
-        return render(request, self.template_name)
+        return render(request, self.template_name, self.context)
