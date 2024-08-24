@@ -26,4 +26,4 @@ class StatsOrderAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("customer", "status", "price")
+    list_display = ("customer", "status", "price", "preferred_date")

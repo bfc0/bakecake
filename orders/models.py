@@ -32,28 +32,34 @@ class Order(models.Model):
                                  verbose_name='Клиент')
 
     status = models.CharField(max_length=4, choices=STATUS, default='NEW')
-    price = models.FloatField(blank=False,
-                              null=False,
-                              verbose_name='Цена')
+    price = models.DecimalField(blank=False,
+                                null=False,
+                                max_digits=8,
+                                decimal_places=2,
+                                verbose_name='Цена')
     comment = models.TextField(blank=True,
                                null=False,
                                default='',
                                verbose_name='Комментарий')
-    address = models.TextField(blank=True,
+    address = models.CharField(blank=True,
                                null=False,
                                default='',
+                               max_length=200,
                                verbose_name='Комментарий')
-    customer_name = models.TextField(blank=True,
+    customer_name = models.CharField(blank=True,
                                      null=False,
                                      default='',
+                                     max_length=50,
                                      verbose_name='Имя')
-    phone_number = models.TextField(blank=True,
+    phone_number = models.CharField(blank=True,
                                     null=False,
                                     default='',
+                                    max_length=20,
                                     verbose_name='Номер телефона')
-    email = models.TextField(blank=True,
+    email = models.CharField(blank=True,
                              null=False,
                              default='',
+                             max_length=30,
                              verbose_name='Почта')
     date_created = models.DateTimeField(auto_now_add=True,
                                         verbose_name='Создано')
