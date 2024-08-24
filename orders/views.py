@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 from django.db.models.query import QuerySet
 from django.shortcuts import render
+from django.utils import timezone
 from django.views import View
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
@@ -45,6 +46,16 @@ def create_order(request, total_amount):
 class IndexView(View):
     def setup(self, request, *args, **kwargs):
         form = AuthenticationForm()
+
+        address = email = name = phone = ""
+        if request.user.is_authenticated:
+            last_order = Order.objects.filter(customer=request.user).last()
+            if last_order:
+                address = last_order.address
+                email = last_order.email
+                name = last_order.customer_name
+                phone = last_order.phone_number
+
         self.context = {
             "DATA": {
                 "Levels": ['не выбрано', '1', '2', '3'],
@@ -52,7 +63,13 @@ class IndexView(View):
                 "Toppings": ['не выбрано', 'Без', 'Белый соус', 'Карамельный', 'Кленовый', 'Черничный', 'Молочный шоколад', 'Клубничный'],
                 "Berries": ['нет', 'Ежевика', 'Малина', 'Голубика', 'Клубника'],
                 "Decors": ['нет', 'Фисташки', 'Безе', 'Фундук',
-                           'Пекан', 'Маршмеллоу', 'Марципан']
+                           'Пекан', 'Маршмеллоу', 'Марципан'],
+                "lastorder": {
+                    "address": address,
+                    "email": email,
+                    "name": name,
+                    "phone": phone,
+                },
             },
             "Costs": {
                 "Levels": [0, 400, 750, 1100],
@@ -101,6 +118,7 @@ def register_order(request):
         desired_time = request.data["desired_time"]
         desired_dt = datetime.strptime(
             f"{desired_date} {desired_time}", "%Y-%m-%d %H:%M")
+        cake.adjust_price(desired_dt)
 
         data = {
             "object_id": cake.id,
@@ -111,11 +129,13 @@ def register_order(request):
             "preferred_date": desired_dt,
             ** request.data,
         }
+
         serializer = OrderSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         response_data = serializer.data.copy()
         response_data.pop("content_object", None)
+
     except Exception as e:
         logging.error(e)
         return Response({"error": "Ошибка при добавлении заказа"}, status=400)

@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "account",
     "cakes",
     "orders",
+    "orders.templatetags",
 ]
 
 MIDDLEWARE = [

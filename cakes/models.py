@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from datetime import timedelta
 
 
 class Event(models.Model):
@@ -184,6 +185,14 @@ class CustomCake(models.Model):
             "berry": self.berry.name,
             "decoration": self.decoration.name,
         }
+
+    def adjust_price(self, desired_dt):
+        if desired_dt.tzinfo is None:
+            desired_dt = timezone.make_aware(
+                desired_dt, timezone.get_current_timezone())
+        if desired_dt <= timezone.now() + timedelta(hours=24):
+            self.price *= 1.2
+            self.save()
 
 
 class Visit(models.Model):

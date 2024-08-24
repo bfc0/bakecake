@@ -1,6 +1,7 @@
-from rest_framework.serializers import ModelSerializer, CharField
+from rest_framework.serializers import ModelSerializer, ValidationError
 from cakes.models import CustomCake
 from orders.models import Order
+from django.utils import timezone
 INSCRIPTION_PRICE = 500
 
 
@@ -33,3 +34,9 @@ class OrderSerializer(ModelSerializer):
         model = Order
         fields = ("price", "phone_number", "email",
                   "object_id", "content_object", "content_type", "customer", "address", "comment", "preferred_date", "customer_name")
+
+    def validate_preferred_date(self, value):
+        if value < timezone.now():
+            raise ValidationError(
+                "Preferred date cannot be in the past.")
+        return value
