@@ -186,13 +186,14 @@ class CustomCake(models.Model):
             "decoration": self.decoration.name,
         }
 
-    def adjust_price(self, desired_dt):
-        if desired_dt.tzinfo is None:
-            desired_dt = timezone.make_aware(
-                desired_dt, timezone.get_current_timezone())
-        if desired_dt <= timezone.now() + timedelta(hours=24):
-            self.price *= 1.2
-            self.save()
+
+def adjust_cake_price(cake, desired_dt):
+    if desired_dt.tzinfo is None:
+        desired_dt = timezone.make_aware(
+            desired_dt, timezone.get_current_timezone())
+    if desired_dt <= timezone.now() + timedelta(hours=24):
+        cake.price *= 1.2
+        cake.save()
 
 
 class Visit(models.Model):

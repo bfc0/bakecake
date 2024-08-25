@@ -13,7 +13,7 @@ from django.views.generic import ListView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from account.models import CustomUser
-from cakes.models import CartAddition
+from cakes.models import CartAddition, CatalogueCake, adjust_cake_price
 from cakes.models import Order as StatsOrder
 from orders.serializers import CakeSerializer, OrderSerializer
 from orders.models import Order
@@ -98,6 +98,7 @@ class IndexView(View):
 @transaction.atomic()
 def register_order(request):
     logging.debug(request.data)
+    print(request.data)
     try:
         if not request.user.is_authenticated:
             user = CustomUser.objects.create_user(
@@ -107,18 +108,22 @@ def register_order(request):
             )
             login(request, user)
 
-        # Chicken and egg problem here
-        cake_data = request.data.pop("customcake")
-        cake_serializer = CakeSerializer(data=cake_data)
-        cake_serializer.is_valid(raise_exception=True)
-        cake = cake_serializer.save()
+        if cake_data := request.data.get("cataloguecake"):
+            cake = CatalogueCake.objects.get(id=cake_data["id"])
+
+        else:
+            cake_data = request.data.pop("customcake")
+            cake_serializer = CakeSerializer(data=cake_data)
+            cake_serializer.is_valid(raise_exception=True)
+            cake = cake_serializer.save()
+
         content_type = ContentType.objects.get_for_model(cake)
 
         desired_date = request.data["desired_date"]
         desired_time = request.data["desired_time"]
         desired_dt = datetime.strptime(
             f"{desired_date} {desired_time}", "%Y-%m-%d %H:%M")
-        cake.adjust_price(desired_dt)
+        adjust_cake_price(cake, desired_dt)
 
         data = {
             "object_id": cake.id,
