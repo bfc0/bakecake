@@ -176,7 +176,12 @@ Vue.createApp({
 
                 if (response.ok) {
                     console.log('Form submitted successfully:', result);
-                    window.location.href = "/account/profile";
+
+                    if (result.payment_url) {
+                        window.location.href = result.payment_url;
+                    } else {
+                        window.location.href = "/account/profile";
+                    }
                 } else {
                     this.errorMessage = result.error || "Неизвестная ошибка"
                     console.error('Error submitting form:', result);

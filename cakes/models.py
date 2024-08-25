@@ -127,6 +127,15 @@ class CatalogueCake(models.Model):
     def __str__(self):
         return self.name
 
+    def serialize(self):
+        return {
+            'name': self.name,
+            'event': self.event if self.event else '',
+            'description': self.description,
+            'price': self.price,
+            'image_url': self.image.url if self.image else None,
+        }
+
 
 class CustomCake(models.Model):
     price = models.FloatField(blank=False,

@@ -17,6 +17,8 @@ from cakes.models import CartAddition, CatalogueCake, adjust_cake_price
 from cakes.models import Order as StatsOrder
 from orders.serializers import CakeSerializer, OrderSerializer
 from orders.models import Order
+from orders.utils import generate_context
+from .payment import create_payment
 
 
 def add_to_cart(request, product):
@@ -56,38 +58,39 @@ class IndexView(View):
                 name = last_order.customer_name
                 phone = last_order.phone_number
 
-        self.context = {
-            "DATA": {
-                "Levels": ['не выбрано', '1', '2', '3'],
-                "Forms": ['не выбрано', 'Круг', 'Квадрат', 'Прямоугольник'],
-                "Toppings": ['не выбрано', 'Без', 'Белый соус', 'Карамельный', 'Кленовый', 'Черничный', 'Молочный шоколад', 'Клубничный'],
-                "Berries": ['нет', 'Ежевика', 'Малина', 'Голубика', 'Клубника'],
-                "Decors": ['нет', 'Фисташки', 'Безе', 'Фундук',
-                           'Пекан', 'Маршмеллоу', 'Марципан'],
-                "lastorder": {
-                    "address": address,
-                    "email": email,
-                    "name": name,
-                    "phone": phone,
-                },
-            },
-            "Costs": {
-                "Levels": [0, 400, 750, 1100],
-                "Forms": [0, 600, 400, 1000],
-                "Toppings": [0, 0, 200, 180, 200, 300, 350, 200],
-                "Berries": [0, 400, 300, 450, 500],
-                "Decors": [0, 300, 400, 350, 300, 200, 280],
-                "Words": 500
-            },
-            "ChosenCakeSpecs": {
-                "Levels": 0,
-                "Form": 0,
-                "Toppings": 0,
-                "Berries": 0,
-                "Decors": 0,
-            },
-            "form": form,
-        }
+        # self.context = {
+        #     "DATA": {
+        #         "Levels": ['не выбрано', '1', '2', '3'],
+        #         "Forms": ['не выбрано', 'Круг', 'Квадрат', 'Прямоугольник'],
+        #         "Toppings": ['не выбрано', 'Без', 'Белый соус', 'Карамельный', 'Кленовый', 'Черничный', 'Молочный шоколад', 'Клубничный'],
+        #         "Berries": ['нет', 'Ежевика', 'Малина', 'Голубика', 'Клубника'],
+        #         "Decors": ['нет', 'Фисташки', 'Безе', 'Фундук',
+        #                    'Пекан', 'Маршмеллоу', 'Марципан'],
+        #         "lastorder": {
+        #             "address": address,
+        #             "email": email,
+        #             "name": name,
+        #             "phone": phone,
+        #         },
+        #     },
+        #     "Costs": {
+        #         "Levels": [0, 400, 750, 1100],
+        #         "Forms": [0, 600, 400, 1000],
+        #         "Toppings": [0, 0, 200, 180, 200, 300, 350, 200],
+        #         "Berries": [0, 400, 300, 450, 500],
+        #         "Decors": [0, 300, 400, 350, 300, 200, 280],
+        #         "Words": 500
+        #     },
+        #     "ChosenCakeSpecs": {
+        #         "Levels": 0,
+        #         "Form": 0,
+        #         "Toppings": 0,
+        #         "Berries": 0,
+        #         "Decors": 0,
+        #     },
+        #     "form": form,
+        # }
+        self.context = generate_context(request)
         super().setup(request, *args, **kwargs)
 
     def get(self, request):
@@ -102,7 +105,7 @@ def register_order(request):
     try:
         if not request.user.is_authenticated:
             user = CustomUser.objects.create_user(
-                phone_number=request.data["phone"],
+                phone_number=request.data["phone_number"],
                 name=request.data["customer_name"],
                 email=request.data["email"],
             )
@@ -137,10 +140,14 @@ def register_order(request):
 
         serializer = OrderSerializer(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        order = serializer.save()
         response_data = serializer.data.copy()
         response_data.pop("content_object", None)
 
+        payment_id, url = create_payment(order.id, order.price)
+        response_data["payment_url"] = url
+
+        print(response_data)
     except Exception as e:
         logging.error(e)
         return Response({"error": "Ошибка при добавлении заказа"}, status=400)

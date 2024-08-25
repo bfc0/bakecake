@@ -1,5 +1,6 @@
 from pathlib import Path
 from environs import Env
+from yookassa import Configuration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -112,3 +113,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "account.CustomUser"
 LOGIN_URL = "login"
+
+Configuration.account_id = env('YOOKASSA_SHOP_ID')
+Configuration.secret_key = env('YOOKASSA_SECRET_KEY')
+YOOKASSA_RETURN_URL = env('YOOKASSA_RETURN_URL')

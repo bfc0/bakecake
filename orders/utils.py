@@ -7,10 +7,10 @@ def generate_context(request):
 
     toppings = m.Topping.objects.all()
     shapes = m.Shape.objects.all()
-    berries = m.Berry.object.all()
-    decors = m.Decoration.object.all()
-    levels = m.Level.object.all()
-    toppings = m.Topping.object.all()
+    berries = m.Berry.objects.all()
+    decors = m.Decoration.objects.all()
+    levels = m.Level.objects.all()
+    toppings = m.Topping.objects.all()
 
     address = email = name = phone = ""
     if request.user.is_authenticated:
@@ -25,11 +25,11 @@ def generate_context(request):
 
     context = {
         "DATA": {
-            "Levels": [l.name for l in levels],
-            "Forms": [s.name for s in shapes],
-            "Toppings": [t.name for t in toppings],
-            "Berries": [b.name for b in berries],
-            "Decors": [d.name for d in decors],
+            "Levels": ["не выбрано"]+[l.name for l in levels],
+            "Forms": ["не выбрано"]+[s.name for s in shapes],
+            "Toppings": ["не выбрано"]+[t.name for t in toppings],
+            "Berries": ["нет"]+[b.name for b in berries],
+            "Decors": ["нет"]+[d.name for d in decors],
 
             "lastorder": {
                 "address": address,
@@ -39,11 +39,11 @@ def generate_context(request):
             },
         },
         "Costs": {
-            "Levels": [l.price for l in levels],
-            "Forms": [s.price for s in shapes],
-            "Toppings": [t.price for t in toppings],
-            "Berries": [b.price for b in berries],
-            "Decors": [d.price for d in decors],
+            "Levels": [0]+[l.price for l in levels],
+            "Forms": [0]+[s.price for s in shapes],
+            "Toppings": [0]+[t.price for t in toppings],
+            "Berries": [0]+[b.price for b in berries],
+            "Decors": [0]+[d.price for d in decors],
             "Words": 500,
         },
         "ChosenCakeSpecs": {
