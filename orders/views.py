@@ -48,49 +48,6 @@ def create_order(request, total_amount):
 
 class IndexView(View):
     def setup(self, request, *args, **kwargs):
-        form = AuthenticationForm()
-
-        address = email = name = phone = ""
-        if request.user.is_authenticated:
-            last_order = Order.objects.filter(customer=request.user).last()
-            if last_order:
-                address = last_order.address
-                email = last_order.email
-                name = last_order.customer_name
-                phone = last_order.phone_number
-
-        # self.context = {
-        #     "DATA": {
-        #         "Levels": ['не выбрано', '1', '2', '3'],
-        #         "Forms": ['не выбрано', 'Круг', 'Квадрат', 'Прямоугольник'],
-        #         "Toppings": ['не выбрано', 'Без', 'Белый соус', 'Карамельный', 'Кленовый', 'Черничный', 'Молочный шоколад', 'Клубничный'],
-        #         "Berries": ['нет', 'Ежевика', 'Малина', 'Голубика', 'Клубника'],
-        #         "Decors": ['нет', 'Фисташки', 'Безе', 'Фундук',
-        #                    'Пекан', 'Маршмеллоу', 'Марципан'],
-        #         "lastorder": {
-        #             "address": address,
-        #             "email": email,
-        #             "name": name,
-        #             "phone": phone,
-        #         },
-        #     },
-        #     "Costs": {
-        #         "Levels": [0, 400, 750, 1100],
-        #         "Forms": [0, 600, 400, 1000],
-        #         "Toppings": [0, 0, 200, 180, 200, 300, 350, 200],
-        #         "Berries": [0, 400, 300, 450, 500],
-        #         "Decors": [0, 300, 400, 350, 300, 200, 280],
-        #         "Words": 500
-        #     },
-        #     "ChosenCakeSpecs": {
-        #         "Levels": 0,
-        #         "Form": 0,
-        #         "Toppings": 0,
-        #         "Berries": 0,
-        #         "Decors": 0,
-        #     },
-        #     "form": form,
-        # }
         self.context = generate_context(request)
         super().setup(request, *args, **kwargs)
 

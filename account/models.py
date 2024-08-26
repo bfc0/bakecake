@@ -10,7 +10,7 @@ class CustomUserManager(BaseUserManager):
         if not phone_number:
             raise ValueError("Необходимо ввести номер телефона")
         if not password:
-            password = "12345"
+            password = "12345"  # Чтобы не отправлять по почте
 
         user = self.model(phone_number=phone_number, **extra_fields)
         user.set_password(password)
