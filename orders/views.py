@@ -59,7 +59,6 @@ class IndexView(View):
 @transaction.atomic()
 def register_order(request):
     logging.debug(request.data)
-    print(request.data)
     try:
         if not request.user.is_authenticated:
             user = CustomUser.objects.create_user(

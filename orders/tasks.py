@@ -3,7 +3,7 @@ from yookassa import Payment
 from .models import Order
 
 
-@background(schedule=60)  # Schedule to run after 5 minutes
+@background(schedule=60)  # TODO: switch to webhooks
 def check_payment_status(order_id):
     try:
         order = Order.objects.get(id=order_id)
