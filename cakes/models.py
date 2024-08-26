@@ -118,7 +118,7 @@ class CatalogueCake(models.Model):
     image = models.ImageField(blank=True,
                               null=True,
                               verbose_name='Изображение',
-                              upload_to="static/img")
+                              upload_to="media/")
 
     class Meta:
         verbose_name = 'Готовый торт'
