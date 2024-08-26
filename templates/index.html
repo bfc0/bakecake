@@ -220,6 +220,7 @@
 					<input v-model="Dates" type="date" name="DATE">
 					<input v-model="Time" type="time" name="TIME">
 					<input v-model="DelivComments" type="text" name="DELIVCOMMENTS">
+					<input v-model="Consent" type="text" name="CONSENT">
 					<button type="submit" ref="HiddenFormSubmit">Submit Order</button>
 				</form>
 				<v-form :validation-schema="schema2" @submit="this.$refs.HiddenFormSubmit.click()">
@@ -331,11 +332,24 @@
 
 									{% endverbatim %}
 								</div>
+
+
 								<button type="submit"
-									class="btn btn_hover text-white rounded-pill mt-3 px-5 shadow-none cake__button cake__bg_pink">К
-									оплате</button>
+									class="btn btn_hover text-white rounded-pill mt-3 px-5 shadow-none cake__button cake__bg_pink">
+									К оплате</button>
 							</div>
 						</div>
+					</div>
+					<div class="position-relative pb-1">
+						<input v-model="Consent" type="checkbox" name="consent" id="consent"
+							class="form-check-input"></v-field>
+						<label for="consent">Даю согласие на сбор и <a
+								href="https://www.tsu.ru/upload/medialibrary/bab/tipovaya-forma_soglasie.doc">обработку
+								данных</a></label>
+						<br />
+						<v-field v-model="Consent" type="text" name="consent" class="d-none"></v-field>
+						<error-message name="consent"
+							class="position-absolute bottom-30 cake_pink fs_14"></error-message>
 					</div>
 				</v-form>
 			</section>

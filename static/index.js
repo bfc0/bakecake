@@ -96,24 +96,16 @@ Vue.createApp({
                         return true;
                     }
                     return ' время доставки';
-                }
+                },
+                consent: (value) => {
+                    console.log("consent value is", value)
+                    if (value) {
+                        return true;
+                    }
+                    return 'Требуется согласие на сбор пд';
+                },
             },
             DATA: window.appData,
-            // DATA: {
-            //     Levels: ['не выбрано', '1', '2', '3'],
-            //     Forms: ['не выбрано', 'Круг', 'Квадрат', 'Прямоугольник'],
-            //     Toppings: ['не выбрано', 'Без', 'Белый соус', 'Карамельный', 'Кленовый', 'Черничный', 'Молочный шоколад', 'Клубничный'],
-            //     Berries: ['нет', 'Ежевика', 'Малина', 'Голубика', 'Клубника'],
-            //     Decors: ['нет', 'Фисташки', 'Безе', 'Фундук', 'Пекан', 'Маршмеллоу', 'Марципан']
-            // },
-            // Costs: {
-            //     Levels: [0, 400, 750, 1100],
-            //     Forms: [0, 600, 400, 1000],
-            //     Toppings: [0, 0, 200, 180, 200, 300, 350, 200],
-            //     Berries: [0, 400, 300, 450, 500],
-            //     Decors: [0, 300, 400, 350, 300, 200, 280],
-            //     Words: 500
-            // },
             Costs: window.costs,
             Levels: window.cakespecs.Levels,
             Form: window.cakespecs.Form,
@@ -132,6 +124,7 @@ Vue.createApp({
             Time: null,
             DelivComments: '',
             errorMessage: '',
+            Consent: false,
         }
     },
     methods: {
