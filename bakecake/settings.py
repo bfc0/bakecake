@@ -18,8 +18,7 @@ SECRET_KEY = env("DJANGO_SECRET")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ["127.0.0.1", "localhost"])
 
 # Application definition
 
@@ -32,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "phonenumber_field",
     "rest_framework",
+    "background_task",
     "account",
     "cakes",
     "orders",

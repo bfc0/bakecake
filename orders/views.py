@@ -17,6 +17,7 @@ from cakes.models import CartAddition, CatalogueCake, adjust_cake_price
 from cakes.models import Order as StatsOrder
 from orders.serializers import CakeSerializer, OrderSerializer
 from orders.models import Order
+from orders.tasks import check_payment_status
 from orders.utils import generate_context
 from .payment import create_payment
 
@@ -146,6 +147,10 @@ def register_order(request):
 
         payment_id, url = create_payment(order.id, order.price)
         response_data["payment_url"] = url
+        order.payment_id = payment_id
+        order.save()
+
+        check_payment_status(order.id)
 
         print(response_data)
     except Exception as e:
