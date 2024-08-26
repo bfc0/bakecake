@@ -5,6 +5,5 @@ from orders.views import IndexView
 
 urlpatterns = [
     path("catalogue/", views.catalogue, name="catalogue"),
-    path("", IndexView.as_view(), name="index"),
-    
+    path("", IndexView.as_view(), name="cake_index"),
 ]
